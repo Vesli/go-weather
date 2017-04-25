@@ -58,6 +58,7 @@ func UpdateWeatherInDB(w *CityWeather, c *mgo.Collection) error {
 	return err
 }
 
+/* TODO use FLAGS instead of hard coding parameters */
 func GetCityWeatherFromApi(city string, c *mgo.Collection) (*CityWeather, error) {
 	url := "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=metric&appid=a3f80eebf75efbe3e8ce1c1192c5d48f"
 

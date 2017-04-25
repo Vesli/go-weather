@@ -17,6 +17,10 @@ import (
 	"gopkg.in/mgo.v2"
 )
 
+/*
+	This is a simple test for flags. Now I see how it works
+	and will change it to proper external communication
+*/
 var flagConfig = flag.String("config", "", "Yolo t'as fait un flag poto")
 var toto = flag.Bool("test", false, "GG BOOL")
 
