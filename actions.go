@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"time"
 
 	"gopkg.in/mgo.v2"
@@ -58,11 +59,13 @@ func UpdateWeatherInDB(w *CityWeather, c *mgo.Collection) error {
 	return err
 }
 
-/* TODO use FLAGS instead of hard coding parameters */
 func GetCityWeatherFromApi(city string, c *mgo.Collection) (*CityWeather, error) {
-	url := "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=metric&appid=a3f80eebf75efbe3e8ce1c1192c5d48f"
+	urlParams := make(url.Values)
+	urlParams.Add("q", city)
+	urlParams.Add("units", conf.Units)
+	urlParams.Add("appid", conf.AppID)
 
-	retUrl, err := http.Get(url)
+	retUrl, err := http.Get(fmt.Sprintf("%s?%s", conf.Url, urlParams.Encode()))
 	if err != nil {
 		return nil, err
 	}

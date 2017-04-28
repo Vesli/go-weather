@@ -1,0 +1,7 @@
+{
+	"url": "http://api.openweathermap.org/data/2.5/weather",
+	"units": "metric",
+	"appid": "a3f80eebf75efbe3e8ce1c1192c5d48f",
+	"dburl": "localhost",
+	"port": 8080
+}
