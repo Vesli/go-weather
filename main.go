@@ -69,7 +69,9 @@ func main() {
 	r := chi.NewRouter()
 	/* export middleware to other functions if plural */
 	r.Use(SessionMiddleware(session))
-	registerRoutes(r)
+
+	/* Mount in anticipation of wild routing */
+	r.Mount("/", registerRoutes())
 
 	http.ListenAndServe(fmt.Sprintf(":%d", conf.Port), r)
 }

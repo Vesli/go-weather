@@ -6,7 +6,8 @@ import (
 	"github.com/pressly/chi"
 )
 
-func registerRoutes(r *chi.Mux) {
+func registerRoutes() *chi.Mux {
+	r := chi.NewRouter()
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Main route. Visit /weather/weekly/{cityName} to see returned data."))
 	})
@@ -22,4 +23,5 @@ func registerRoutes(r *chi.Mux) {
 			r.Get("/:city", getWeeklyWeather)
 		})
 	})
+	return r
 }
