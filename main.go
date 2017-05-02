@@ -34,9 +34,10 @@ type config struct {
 // var flagConfig = flag.String("config", "", "Yolo t'as fait un flag poto")
 // var toto = flag.Bool("test", false, "GG BOOL")
 
-var pathToConfig = flag.String("config", "configuration/weatherConfig.json", "Config file path")
-
-var conf *config
+var (
+	pathToConfig = flag.String("config", "config/weatherConfig.json", "Config file path")
+	conf         *config
+)
 
 func loadConfig(pathToConfig string) (*config, error) {
 	data, err := ioutil.ReadFile(pathToConfig)
@@ -67,7 +68,6 @@ func main() {
 	defer session.Close()
 
 	r := chi.NewRouter()
-	/* export middleware to other functions if plural */
 	r.Use(SessionMiddleware(session))
 
 	/* Mount in anticipation of wild routing */
