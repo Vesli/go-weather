@@ -28,3 +28,4 @@ _testmain.go
 
 # Config file
 config.json
+config-test.json

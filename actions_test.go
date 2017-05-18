@@ -11,10 +11,14 @@ var _ = Describe("Actions", func() {
 	Describe("Test get city weather function", func() {
 		Context("When the DB is empty", func() {
 			It("Should call the API", func() {
-				w, err := getCityWeather("london", dailyWeatherC, conf)
+				w, err := getWeatherFromDB("roma", dailyWeatherC, conf)
+				Expect(err).To(HaveOccurred())
+				Expect(w).To(BeNil())
+
+				w, err = getCityWeatherFromAPI("roma", dailyWeatherC, conf)
 				Expect(err).NotTo(HaveOccurred())
 				Expect(w).NotTo(BeNil())
-				Expect(w.Name).To(Equal("London"))
+				Expect(w.Name).To(Equal("Roma"))
 			})
 		})
 	})
