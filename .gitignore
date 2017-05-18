@@ -3,6 +3,9 @@
 *.a
 *.so
 
+# Binary
+go-weather
+
 # Folders
 _obj
 _test

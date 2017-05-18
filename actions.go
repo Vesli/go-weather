@@ -4,6 +4,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -37,6 +38,12 @@ type cityWeather struct {
 	Main       mainWeather `json:"main" bson:"main"`
 }
 
+func updateWeatherInDB(w *cityWeather, c *mgo.Collection) error {
+	w.LastUpdate = time.Now()
+	_, err := c.Upsert(bson.M{"name": w.Name}, w)
+	return err
+}
+
 func getWeatherFromDB(city string, c *mgo.Collection, conf *config.Config) (*cityWeather, error) {
 	w := new(cityWeather)
 	err := c.Find(bson.M{"name": city}).One(w)
@@ -48,18 +55,9 @@ func getWeatherFromDB(city string, c *mgo.Collection, conf *config.Config) (*cit
 	diff := now.Sub(w.LastUpdate)
 
 	if diff.Hours() > 1 {
-		w, err = getCityWeatherFromAPI(city, c, conf)
-		if err != nil {
-			return nil, err
-		}
+		return nil, errors.New("Update weather from API")
 	}
 	return w, nil
-}
-
-func updateWeatherInDB(w *cityWeather, c *mgo.Collection) error {
-	w.LastUpdate = time.Now()
-	_, err := c.Upsert(bson.M{"name": w.Name}, w)
-	return err
 }
 
 func getCityWeatherFromAPI(city string, c *mgo.Collection, conf *config.Config) (*cityWeather, error) {
@@ -92,7 +90,6 @@ func getCityWeatherFromAPI(city string, c *mgo.Collection, conf *config.Config) 
 	return w, nil
 }
 
-// GetCityWeather ...
 func getCityWeather(city string, c *mgo.Collection, conf *config.Config) (*cityWeather, error) {
 	w, err := getWeatherFromDB(city, c, conf)
 	if err == nil {
