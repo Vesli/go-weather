@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	conf          *config.Config
+	confTest      *config.Config
 	dbSession     *mgo.Session
 	dailyWeatherC *mgo.Collection
 )
@@ -25,18 +25,19 @@ func TestGoWeather(t *testing.T) {
 
 var _ = BeforeSuite(func() {
 	var err error
-	conf, err = config.LoadConfig("config-test.json")
+	confTest, err = config.LoadConfig("config-test.json")
 	Expect(err).NotTo(HaveOccurred())
 
-	dbSession, err = mgo.Dial(conf.DbURL)
+	dbSession, err = mgo.Dial(confTest.DbURL)
 	Expect(err).NotTo(HaveOccurred())
 
-	dailyWeatherC = dbSession.DB("goweather").C("dailyweather")
+	dailyWeatherC = dbSession.DB(confTest.DBName).C("dailyweather")
 	Expect(dailyWeatherC).NotTo(BeNil())
 
 })
 
 var _ = AfterSuite(func() {
 	fmt.Println("Closing!")
+	dbSession.DB(confTest.DBName).C("dailyweather").RemoveAll(nil)
 	dbSession.Close()
 })

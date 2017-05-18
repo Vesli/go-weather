@@ -38,6 +38,8 @@ type cityWeather struct {
 	Main       mainWeather `json:"main" bson:"main"`
 }
 
+var errOutDated = errors.New("Update weather from API")
+
 func updateWeatherInDB(w *cityWeather, c *mgo.Collection) error {
 	w.LastUpdate = time.Now()
 	_, err := c.Upsert(bson.M{"name": w.Name}, w)
@@ -55,7 +57,7 @@ func getWeatherFromDB(city string, c *mgo.Collection, conf *config.Config) (*cit
 	diff := now.Sub(w.LastUpdate)
 
 	if diff.Hours() > 1 {
-		return nil, errors.New("Update weather from API")
+		return nil, errOutDated
 	}
 	return w, nil
 }
