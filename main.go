@@ -4,28 +4,20 @@ package main
 
 import (
 	"flag"
-	"fmt"
-	"net/http"
+	"log"
 
-	"github.com/pressly/chi"
+	"github.com/go-weather/service"
 )
 
 func main() {
 	pathToConfig := flag.String("config", "config.json", "Config file path")
 	flag.Parse()
 
-	service, err := newService(*pathToConfig)
+	service, err := service.NewService(*pathToConfig)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	defer service.Close()
 
-	r := chi.NewRouter()
-	ret := initMiddleware(service)
-	r.Use(ret)
-
-	/* Mount in anticipation of wild routing */
-	r.Mount("/", registerRoutes())
-
-	http.ListenAndServe(fmt.Sprintf(":%d", service.Config.Port), r)
+	service.Run()
 }
